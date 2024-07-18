@@ -211,5 +211,8 @@ public class GameApp {
         String name = scanner.nextLine();
         userManagement.createUser(id, pw, name);
         System.out.println("회원가입이 완료되었습니다.");
+
+        login();
+
     }
 }
