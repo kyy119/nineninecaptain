@@ -209,10 +209,12 @@ public class GameApp {
         String pw = scanner.nextLine();
         System.out.print("이름 입력: ");
         String name = scanner.nextLine();
-        userManagement.createUser(id, pw, name);
-        System.out.println("회원가입이 완료되었습니다.");
+        if(userManagement.createUser(id,pw,name)){
 
-        login();
+            System.out.println("회원가입이 완료되었습니다.");
+        }else{
+            register();
+        }
 
     }
 }

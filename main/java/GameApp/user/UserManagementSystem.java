@@ -16,23 +16,29 @@ public class UserManagementSystem {
         loadUsersFromFile();
     }
     //user 생성 메소드
-    public void createUser(String id, String pw, String name) {
+    public boolean createUser(String id, String pw, String name) {
         if (!isUserIdAvailable(id)) {
             System.out.println("오류: 이미 존재하는 사용자 아이디입니다. 다른 아이디를 선택해주세요.");
-            return;
+            return false;
         }
         if (!isUserIdActive(id)) {
             System.out.println("오류: 비활성된 사용자 아이디입니다. 다른 아이디를 선택해주세요.");
-            return;
+            return false;
         }
         if (pw.length() < 3) {
             System.out.println("오류: 비밀번호는 최소 3자 이상이어야 합니다.");
-            return;
+            return false;
         }
+//        if (pw.matches("[a-zA-Z]+")){
+//            System.out.println();
+//        } else {
+//            System.out.println("오류: 비밀번호에 특수 문자를 포함하여야 합니다.");
+//        }
         String currentTime = CreatedAt.createDate();
         User newUser = new User(id, pw, name, currentTime, User.ACTIVE);
         userList.add(newUser);
         saveUsersToFile();
+        return true;
 
     }
 
