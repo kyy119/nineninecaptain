@@ -28,12 +28,11 @@ public class UserManagementSystem {
         if (pw.length() < 3) {
             System.out.println("오류: 비밀번호는 최소 3자 이상이어야 합니다.");
             return false;
+        } else if (!pw.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            System.out.println("오류: 비밀번호에 특수 문자를 포함해야 합니다.");
+            return false;
         }
-//        if (pw.matches("[a-zA-Z]+")){
-//            System.out.println();
-//        } else {
-//            System.out.println("오류: 비밀번호에 특수 문자를 포함하여야 합니다.");
-//        }
+
         String currentTime = CreatedAt.createDate();
         User newUser = new User(id, pw, name, currentTime, User.ACTIVE);
         userList.add(newUser);
@@ -71,9 +70,15 @@ public class UserManagementSystem {
     public void updateUserPassword(String id, String newPw) {
         for (User user : userList) {
             if (user.getUserId().equals(id)) {
+                while(newPw.length() < 3 || !newPw.matches(".*[!@#$%^&*(),.?\":{}|<>].*")){
+                    System.out.println("오류: 비밀번호는 최소 3자 이상이어야 하며, 특수 문자를 포함해야 합니다.");
+                    System.out.print("새로운 비밀번호 입력: ");
+                    newPw = new java.util.Scanner(System.in).nextLine();
+                }
+
                 user.setPassword(newPw);
                 saveUsersToFile();
-                System.out.println("비밀번호가 성공적으로 업데이트되었습니다.");
+
                 return;
             }
         }

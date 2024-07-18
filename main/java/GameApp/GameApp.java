@@ -13,7 +13,12 @@ public class GameApp {
     private static boolean loginFailed;
 
     public static void main(String[] args) {
-        userManagement = new UserManagementSystem();
+        try {
+            userManagement = new UserManagementSystem();
+        } catch (Exception e) {
+            System.out.println("파일을 불러오지 못하였습니다. 종료합니다.");
+            System.exit(1);
+        }
         scanner = new Scanner(System.in);
         int choice = 0;
 
