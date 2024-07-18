@@ -33,10 +33,7 @@ public class UserManagementSystem {
         User newUser = new User(id, pw, name, currentTime, User.ACTIVE);
         userList.add(newUser);
         saveUsersToFile();
-        System.out.println("사용자가 성공적으로 생성되었습니다.");
-        for(int i = 0; i < userList.size(); i ++){
-            System.out.println(userList.get(i).getUserId());
-        }
+
     }
 
     //로그인 메소드
@@ -48,10 +45,7 @@ public class UserManagementSystem {
                 return true;
             }
         }
-        System.out.println("로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인하세요.");
-        for(int i = 0; i < userList.size(); i ++){
-            System.out.println(userList.get(i).getUserId());
-        }
+
         return false;
     }
 
