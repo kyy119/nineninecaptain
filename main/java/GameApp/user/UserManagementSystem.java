@@ -15,7 +15,6 @@ public class UserManagementSystem {
         filePath = new UserFile();
         loadUsersFromFile();
     }
-
     //user 생성 메소드
     public void createUser(String id, String pw, String name) {
         if (!isUserIdAvailable(id)) {
@@ -35,6 +34,9 @@ public class UserManagementSystem {
         userList.add(newUser);
         saveUsersToFile();
         System.out.println("사용자가 성공적으로 생성되었습니다.");
+        for(int i = 0; i < userList.size(); i ++){
+            System.out.println(userList.get(i).getUserId());
+        }
     }
 
     //로그인 메소드
@@ -47,6 +49,9 @@ public class UserManagementSystem {
             }
         }
         System.out.println("로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인하세요.");
+        for(int i = 0; i < userList.size(); i ++){
+            System.out.println(userList.get(i).getUserId());
+        }
         return false;
     }
 
@@ -126,21 +131,6 @@ public class UserManagementSystem {
         }
         return false;
     }
-
-    //파일안에 있는 user 데이터들 list에 넣어 가져오는 메소드
-//    private void loadUsersFromFile() {
-//        try (InputStream inputStream = new FileInputStream(
-//            filePath.getFilePath()); BufferedReader reader = new BufferedReader(
-//            new InputStreamReader(inputStream))) {
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                userList.add(User.fromString(line));
-//            }
-//        } catch (IOException e) {
-//            System.out.println("파일 로드 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
     private void loadUsersFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath.getFilePath()))) {
             userList = (List<User>) ois.readObject();
@@ -151,20 +141,6 @@ public class UserManagementSystem {
         }
     }
 
-    //user 데이터 파일에 저장하는 메소드
-//    private void saveUsersToFile() {
-//        try (OutputStream outputStream = new FileOutputStream(
-//            filePath.getFilePath()); BufferedWriter writer = new BufferedWriter(
-//            new OutputStreamWriter(outputStream))) {
-//
-//            for (User user : userList) {
-//                writer.write(user.toString());
-//                writer.newLine();
-//            }
-//        } catch (IOException e) {
-//            System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
     private void saveUsersToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath.getFilePath()))) {
             oos.writeObject(userList);
