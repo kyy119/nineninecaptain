@@ -14,7 +14,7 @@ public class User extends CreatedAt implements Serializable {
 
 
     public User( String userId, String userPw, String userName,String createdAt, int userStatus) {
-        super();
+        super(createDate());
         this.userId = userId;
         this.userPw = userPw;
         this.userName = userName;
