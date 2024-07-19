@@ -172,7 +172,7 @@ public class GameApp {
         System.out.println("\n--------------");
         System.out.println("----정보----");
         System.out.println("1. Game Start");
-        System.out.println("2. 비밀번호 변경");
+        System.out.println("2. 랭킹 보기");
         System.out.println("3. 마이페이지");
         System.out.println("4. 로그아웃");
         System.out.println("5. 프로그램 종료");
