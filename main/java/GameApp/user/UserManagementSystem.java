@@ -4,6 +4,7 @@ import GameApp.util.CreatedAt;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class UserManagementSystem {
 
@@ -41,8 +42,17 @@ public class UserManagementSystem {
 
     }
 
+    public boolean loginInActive(String id, String pw){
+        for(User user : userList){
+            if(user.getUserId().equals(id) && user.getPassword().equals(pw) && user.getUserStatus() == User.INACTIVE){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //로그인 메소드
-    public boolean login(String id, String pw) {
+    public boolean loginActive(String id, String pw) {
         for (User user : userList) {
             if (user.getUserId().equals(id) && user.getPassword().equals(pw)
                 && user.getUserStatus() == User.ACTIVE) {
@@ -82,9 +92,19 @@ public class UserManagementSystem {
                 return;
             }
         }
-        System.out.println("오류: 해당 사용자를 찾을 수 없습니다.");
     }
-
+    public void updateEqualPassword(String id, String pw){
+        for(User user : userList){
+            if(user.getUserId().equals(id)){
+                if(user.getPassword().equals(pw)){
+                    System.out.println("이전 비밀번호랑 똑같습니다.");
+                    System.out.print("새로운 비밀번호 입력: ");
+                    pw = new java.util.Scanner(System.in).nextLine();
+                }
+                updateUserPassword(id,pw);
+            }
+        }
+    }
     //user 삭제 메소드
     public void deleteUser(String id, String pw) {
         boolean found = false;
@@ -93,7 +113,6 @@ public class UserManagementSystem {
                 if (user.getPassword().equals(pw.trim())) {
                     user.setUserStatus(User.INACTIVE);
                     saveUsersToFile();
-                    System.out.println("사용자가 성공적으로 비활성화되었습니다.");
                     found = true;
                     break;
                 } else {

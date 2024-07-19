@@ -13,6 +13,9 @@ public class GameApp {
     private static boolean loginFailed;
 
     public static void main(String[] args) {
+        main();
+    }
+    public static void main(){
         try {
             userManagement = new UserManagementSystem();
         } catch (Exception e) {
@@ -67,8 +70,12 @@ public class GameApp {
         String id = scanner.nextLine();
         System.out.print("2. 비밀번호 입력: ");
         String pw = scanner.nextLine();
-
-        boolean loggedIn = userManagement.login(id, pw);
+        boolean logInActive = userManagement.loginInActive(id,pw);
+        if(logInActive){
+            System.out.println("비활성화된 아이디 입니다. 다른 아이디로 로그인을 해주세요.");
+            loginFailed = true;
+        }
+        boolean loggedIn = userManagement.loginActive(id, pw);
         if (loggedIn) {
             loggedInId = id;
             loggedInPw = pw;
@@ -180,32 +187,45 @@ public class GameApp {
 
         if (!currentPw.equals(loggedInPw)) {
             System.out.println("현재 비밀번호가 일치하지 않습니다.");
-            return;
+            changePassword();
         }
 
         System.out.print("새로운 비밀번호 입력: ");
         String newPw = scanner.nextLine();
-        userManagement.updateUserPassword(loggedInId, newPw);
+        userManagement.updateEqualPassword(loggedInId, newPw);
+//        userManagement.updateUserPassword(loggedInId, newPw);
         System.out.println("비밀번호가 성공적으로 변경되었습니다.");
         loggedInPw = newPw;  // 변경된 비밀번호로 업데이트
+        main();
+        System.out.println(loggedInPw);
     }
 
     private static void deleteUser() {
-        System.out.println("\n----회원 탈퇴----");
-        System.out.print("비밀번호 입력: ");
-        String pw = scanner.nextLine();
-
-        if (!pw.equals(loggedInPw)) {
-            System.out.println("비밀번호가 일치하지 않습니다.");
-            return;
+        System.out.println("\n----아이디 삭제----");
+        System.out.print("아이디 입력: ");
+        String id = scanner.nextLine();
+        if (id.equals(loggedInId) && !userManagement.isUserIdAvailable(id)) {
+            deletePassWord(id);
+        } else {
+            System.out.println("잘못된 아이디 입력 다시 해주세요");
+            deleteUser();
         }
-
-        userManagement.deleteUser(loggedInId, pw);
-        System.out.println("회원 탈퇴가 완료되었습니다.");
-        loggedInId = null;
-        loggedInPw = null;
     }
 
+    private static void deletePassWord(String id) {
+        System.out.print("비밀번호 입력: ");
+        String pw = scanner.nextLine();
+        if (pw.equals(loggedInPw)) {
+            userManagement.deleteUser(id, pw);
+            System.out.println("회원 탈퇴가 완료되었습니다.");
+            loggedInId = null;
+            loggedInPw = null;
+            main();
+        } else {
+            System.out.println("잘못된 비밀 번호 입니다. 다시 입력해주세요.");
+            deletePassWord(id);
+        }
+    }
     private static void register() {
         System.out.println("\n----회원가입----");
         System.out.print("아이디 입력: ");
@@ -215,8 +235,8 @@ public class GameApp {
         System.out.print("이름 입력: ");
         String name = scanner.nextLine();
         if(userManagement.createUser(id,pw,name)){
-
             System.out.println("회원가입이 완료되었습니다.");
+            login();
         }else{
             register();
         }
