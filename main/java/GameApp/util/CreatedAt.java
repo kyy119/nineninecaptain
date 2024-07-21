@@ -10,6 +10,9 @@ public class CreatedAt {
         this.create = create;
     }
 
+    public CreatedAt() {
+    }
+
     public String getCreate() {
         return create;
     }
