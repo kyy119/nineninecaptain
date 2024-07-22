@@ -1,10 +1,9 @@
 package GameApp.game;
 
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Game {
     Scanner scanner = new Scanner(System.in);
@@ -156,34 +155,49 @@ public class Game {
             int num1 = makeRandomNum(difficulty);
             int num2 = makeRandomNum(difficulty);
             if (operatorNum == 3){
-                while (num1%num2 != 0){
-                    num1 = makeRandomNum(difficulty);
-                    num2 = makeRandomNum(difficulty);
+                Random random = new Random();
+                switch (difficulty){
+                    case 2 -> {
+                        //1 ~ 10(100) 중 num2의 배수 리스트에 담기
+                        List<Integer> dividedNumList = IntStream.rangeClosed(1, 10 / num2)
+                                                                .mapToObj(i -> i * num2)
+                                                                .collect(Collectors.toList());
+                        num1 = dividedNumList.get(random.nextInt(dividedNumList.size()));
+                        break;
+                    }
+
+                    case 3 -> {
+                        List<Integer> dividedNumList = IntStream.rangeClosed(1, 100 / num2)
+                                .mapToObj(i -> i * num2)
+                                .collect(Collectors.toList());
+                        num1 = dividedNumList.get(random.nextInt(dividedNumList.size()));
+                        break;
+                    }
                 }
             }
             int result = calculateNum(num1, num2, operatorNum);
-
             int input = scanner.nextInt();
-
             if (input == result) {
-                switch(difficulty){
-                    case 1:
-                        score += 10;
-                        break;
-                    case 2:
-                        score += 15;
-                        break;
-                    case 3:
-                        score += 20;
-                        break;
+                if (gameRunning) {
+                    switch (difficulty) {
+                        case 1:
+                            score += 10;
+                            break;
+                        case 2:
+                            score += 15;
+                            break;
+                        case 3:
+                            score += 20;
+                            break;
+                    }
+                    System.out.println("정답입니다!! 현재 점수: " + score);
                 }
-
-                System.out.println("정답입니다!! 현재 점수: " + score);
             } else {
-                life--;
-
-                System.out.println("오답입니다!!");
-                System.out.println("남은 목숨은 " + life + " 개입니다.");
+                if (gameRunning) {
+                    life--;
+                    System.out.println("오답입니다!!");
+                    System.out.println("남은 목숨은 " + life + " 개입니다.");
+                }
             }
         }
     }
