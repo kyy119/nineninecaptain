@@ -1,6 +1,7 @@
 package GameApp;
 
 import GameApp.rank.RankController;
+import GameApp.game.Game;
 import GameApp.user.UserManagementSystem;
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -37,7 +38,8 @@ public class GameApp {
                 scanner.nextLine();  // 잘못된 입력 제거
                 continue;
             }
-
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // 개행 문자 제거
             switch (choice) {
                 case 1:
                     login();
@@ -52,7 +54,7 @@ public class GameApp {
                     System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
                     break;
             }
-        }
+//        }
 
         scanner.close();
     }
@@ -105,7 +107,7 @@ public class GameApp {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Game Start!");
+                   showGameMenu();
                     break;
                 case 2://랭킹보기
                     RankController rankController = new RankController();
@@ -125,6 +127,73 @@ public class GameApp {
                     break;
             }
         }
+//    }
+
+    // [실행] 게임 난이도 선택
+    private static void showGameMenu() {
+        printGameLevel();
+        int choice = scanner.nextInt();
+        scanner.nextLine();  // 개행 문자 제거
+        Game game = new Game();
+        switch (choice) {
+            case 1:
+                game.prepareGame(1);
+                break;
+            case 2:
+                game.prepareGame(2);
+                break;
+            case 3:
+                game.prepareGame(3);
+                break;
+            case 4:
+                loginMenu();
+                return;
+            default:
+                System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
+                showGameMenu();
+                return;
+        }
+        showEndGameMenu();
+    }
+
+    // [실행] 게임이 끝나고 앞으로 할 행위 선택
+    private static void showEndGameMenu() {
+        printEndGameMenu();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        switch (choice) {
+            case 1:
+                showGameMenu();
+                break;
+            case 2:
+                loginMenu();
+                break;
+            case 3:
+                System.exit(0);
+            default:
+                System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
+                showEndGameMenu();
+                return;
+        }
+    }
+
+    // [출력] 게임 난이도 선택
+    private static void printGameLevel(){
+        System.out.println("\n------------------------");
+        System.out.println("----게임 난이도를 선텍하세요----");
+        System.out.println("1. 1단계 (쉬움) 정답시 + 10점");
+        System.out.println("2. 2단계 (보통) 정답시 + 15점");
+        System.out.println("3. 3단계 (어려움) 정답시 + 20점");
+        System.out.println("4. 뒤로 가기");
+        System.out.println("--------------");
+        System.out.print("원하는 작업을 선택하세요: ");
+    }
+
+    // [출력] 게임이 끝나고 앞으로 할 행위 선택
+    private static void printEndGameMenu(){
+        System.out.println("----------------------");
+        System.out.println("1.재도전 2.홈 화면 3.종료");
+        System.out.println("----------------------");
     }
 
     private static void showMyPage() throws IOException {
