@@ -15,7 +15,10 @@ public class RankController {
         rankService.createRank(userId, score);
     }
 
-    public List<Rank> top20Rank(){
-        return rankService.findRankTop20();
+    public void top20Rank(){
+        rankService.findRankTop20();
+    }
+    public Rank myRank(String userId){
+        return rankService.findMyRankbyUserId(userId);
     }
 }

@@ -180,13 +180,7 @@ public class UserManagementSystem {
     public void showScoreFromRank(String id){
         int score = -1;
         int ranking = -1;
-        List<Rank> list = rankController.top20Rank();
-        for(int i = 0; i < list.size(); i ++){
-            if(id.equals(list.get(i).getUserId())){
-                score = list.get(i).getScore();
-                ranking = i + 1;
-            }
-        }
-        System.out.println("나의 점수 : "+ score +" 등수 : "+ ranking);
+        Rank r = rankController.myRank(id);
+        System.out.println("나의 점수 : "+ r.getScore()+" 입니다.");
     }
 }

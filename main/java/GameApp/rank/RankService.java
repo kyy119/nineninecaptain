@@ -118,7 +118,7 @@ public class RankService {
         return true;
     }
     // 랭킹 20명을 보여준다. 점수 순으로 점수가 같다면 먼저 푼사람
-    public List<Rank> findRankTop20(){
+    public void findRankTop20(){
         List<Rank> rankList = readRankFromFile();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // 점수가 높은순으로 정렬하고 점수가 같다면 일찍인사람이 먼저오는 정렬
@@ -134,8 +134,27 @@ public class RankService {
                 int count = rankCounter.getAndIncrement();
                 System.out.println(count + "등 | 유저점수 ==>> " + rr.getScore() + "아이디 ==>> " + rr.getUserId() + "생성된 날짜" + rr.getCreate());
             });
-        return top20;
 
+
+    }
+    public Rank findMyRankbyUserId(String userId){
+        List<Rank> allList = readRankFromFile();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 점수가 높은순으로 정렬하고 점수가 같다면 일찍인사람이 먼저오는 정렬
+        List<Rank> top20 = allList.stream()
+            .sorted(Comparator.comparing(Rank :: getScore).reversed()
+                .thenComparing(Rank -> LocalDateTime.parse(Rank.getCreate(),formatter)))
+            .limit(20)
+            .collect(Collectors.toList());
+        // 들어온 유저 아이디만 뽑아온다.
+        List<Rank> myRank = top20.stream()
+            .filter(rank -> rank.getUserId().equals(userId))
+            .collect(Collectors.toList());
+        if(myRank.isEmpty()){
+            return null;
+        }else{
+            return myRank.get(0);
+        }
     }
 }
 
