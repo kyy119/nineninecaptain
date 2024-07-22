@@ -210,7 +210,7 @@ public class GameApp {
 
             switch (choice) {
                 case 1:
-                    System.out.println("기능 구현 중");
+                    userManagement.showScoreFromRank(loggedInId);
                     break;
                 case 2:
                     changePassword();
