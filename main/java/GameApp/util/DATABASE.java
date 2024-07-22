@@ -1,8 +1,8 @@
 package GameApp.util;
 
 public enum DATABASE {
-    User("/Users/yoon/Desktop/Test/user.txt"),
-    RANK("/Users/yoon/Desktop/Test/rank.txt");
+    User("/Users/duck/Desktop/Test/user.txt"),
+    RANK("/Users/duck/Desktop/Test/rank.txt");
 
     private String database;
     DATABASE(String database) {

@@ -132,6 +132,7 @@ public class GameApp {
         int choice = scanner.nextInt();
         scanner.nextLine();  // 개행 문자 제거
         Game game = new Game();
+        RankController rankController = new RankController();
         switch (choice) {
             case 1:
                 game.prepareGame(1);
@@ -150,6 +151,7 @@ public class GameApp {
                 showGameMenu();
                 return;
         }
+        rankController.createRank(loggedInId,game.getScore());
         showEndGameMenu();
     }
 
