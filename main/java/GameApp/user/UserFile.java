@@ -20,6 +20,7 @@ public class UserFile {
                 userFile.createNewFile();
             } catch (IOException e) {
                 System.out.println("파일 생성 중 오류가 발생했습니다: " + e.getMessage());
+                System.exit(0);
             }
         }
     }
