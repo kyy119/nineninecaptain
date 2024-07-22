@@ -10,7 +10,7 @@ public class UserFile {
 
 
     public UserFile() {
-        String userHome = "/Users/yoon/Desktop/Test";
+        String userHome = "/Users/junghunmok/Desktop/nineninecaptain";
         filePath = Paths.get(userHome, "user_data", "users.txt").toString();
         File fileDir = new File(Paths.get(userHome, "user_data").toString());
         fileDir.mkdirs();

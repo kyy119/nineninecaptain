@@ -1,13 +1,16 @@
 package GameApp.rank;
 
+import GameApp.util.CreatedAt;
+
 import java.io.Serializable;
 
-public class Rank implements Serializable {
+public class Rank extends CreatedAt implements Serializable {
     private static final long serialVersionUID = -123;
     private String userId;
     private int score;
 
     public Rank(String userId, int score) {
+        super(CreatedAt.createDate());
         this.userId = userId;
         this.score = score;
     }

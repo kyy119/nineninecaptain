@@ -165,7 +165,11 @@ public class UserManagementSystem {
 //            System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
 //        }
 //    }
+
+
+
     private void saveUsersToFile() {
+        System.out.println("파일정보 ==>> "  + filePath.getFilePath());
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath.getFilePath()))) {
             oos.writeObject(userList);
         } catch (IOException e) {
