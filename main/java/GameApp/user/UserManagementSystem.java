@@ -1,9 +1,11 @@
 package GameApp.user;
 
 import GameApp.util.CreatedAt;
+import GameApp.util.DATABASE;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class UserManagementSystem {
 
@@ -15,30 +17,43 @@ public class UserManagementSystem {
         filePath = new UserFile();
         loadUsersFromFile();
     }
-
     //user 생성 메소드
-    public void createUser(String id, String pw, String name) {
+    public boolean createUser(String id, String pw, String name) {
         if (!isUserIdAvailable(id)) {
             System.out.println("오류: 이미 존재하는 사용자 아이디입니다. 다른 아이디를 선택해주세요.");
-            return;
+            return false;
         }
         if (!isUserIdActive(id)) {
             System.out.println("오류: 비활성된 사용자 아이디입니다. 다른 아이디를 선택해주세요.");
-            return;
+            return false;
         }
         if (pw.length() < 3) {
             System.out.println("오류: 비밀번호는 최소 3자 이상이어야 합니다.");
-            return;
+            return false;
+        } else if (!pw.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            System.out.println("오류: 비밀번호에 특수 문자를 포함해야 합니다.");
+            return false;
         }
+
         String currentTime = CreatedAt.createDate();
         User newUser = new User(id, pw, name, currentTime, User.ACTIVE);
         userList.add(newUser);
         saveUsersToFile();
-        System.out.println("사용자가 성공적으로 생성되었습니다.");
+        return true;
+
+    }
+
+    public boolean loginInActive(String id, String pw){
+        for(User user : userList){
+            if(user.getUserId().equals(id) && user.getPassword().equals(pw) && user.getUserStatus() == User.INACTIVE){
+                return true;
+            }
+        }
+        return false;
     }
 
     //로그인 메소드
-    public boolean login(String id, String pw) {
+    public boolean loginActive(String id, String pw) {
         for (User user : userList) {
             if (user.getUserId().equals(id) && user.getPassword().equals(pw)
                 && user.getUserStatus() == User.ACTIVE) {
@@ -46,7 +61,7 @@ public class UserManagementSystem {
                 return true;
             }
         }
-        System.out.println("로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인하세요.");
+
         return false;
     }
 
@@ -66,15 +81,31 @@ public class UserManagementSystem {
     public void updateUserPassword(String id, String newPw) {
         for (User user : userList) {
             if (user.getUserId().equals(id)) {
+                while(newPw.length() < 3 || !newPw.matches(".*[!@#$%^&*(),.?\":{}|<>].*")){
+                    System.out.println("오류: 비밀번호는 최소 3자 이상이어야 하며, 특수 문자를 포함해야 합니다.");
+                    System.out.print("새로운 비밀번호 입력: ");
+                    newPw = new java.util.Scanner(System.in).nextLine();
+                }
+
                 user.setPassword(newPw);
                 saveUsersToFile();
-                System.out.println("비밀번호가 성공적으로 업데이트되었습니다.");
+
                 return;
             }
         }
-        System.out.println("오류: 해당 사용자를 찾을 수 없습니다.");
     }
-
+    public void updateEqualPassword(String id, String pw){
+        for(User user : userList){
+            if(user.getUserId().equals(id)){
+                if(user.getPassword().equals(pw)){
+                    System.out.println("이전 비밀번호랑 똑같습니다.");
+                    System.out.print("새로운 비밀번호 입력: ");
+                    pw = new java.util.Scanner(System.in).nextLine();
+                }
+                updateUserPassword(id,pw);
+            }
+        }
+    }
     //user 삭제 메소드
     public void deleteUser(String id, String pw) {
         boolean found = false;
@@ -83,7 +114,6 @@ public class UserManagementSystem {
                 if (user.getPassword().equals(pw.trim())) {
                     user.setUserStatus(User.INACTIVE);
                     saveUsersToFile();
-                    System.out.println("사용자가 성공적으로 비활성화되었습니다.");
                     found = true;
                     break;
                 } else {
@@ -126,23 +156,8 @@ public class UserManagementSystem {
         }
         return false;
     }
-
-    //파일안에 있는 user 데이터들 list에 넣어 가져오는 메소드
-//    private void loadUsersFromFile() {
-//        try (InputStream inputStream = new FileInputStream(
-//            filePath.getFilePath()); BufferedReader reader = new BufferedReader(
-//            new InputStreamReader(inputStream))) {
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                userList.add(User.fromString(line));
-//            }
-//        } catch (IOException e) {
-//            System.out.println("파일 로드 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
     private void loadUsersFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath.getFilePath()))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
             userList = (List<User>) ois.readObject();
             for(User user: userList){
                 System.out.println(user.getUserId());
@@ -154,22 +169,8 @@ public class UserManagementSystem {
         }
     }
 
-    //user 데이터 파일에 저장하는 메소드
-//    private void saveUsersToFile() {
-//        try (OutputStream outputStream = new FileOutputStream(
-//            filePath.getFilePath()); BufferedWriter writer = new BufferedWriter(
-//            new OutputStreamWriter(outputStream))) {
-//
-//            for (User user : userList) {
-//                writer.write(user.toString());
-//                writer.newLine();
-//            }
-//        } catch (IOException e) {
-//            System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
     private void saveUsersToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath.getFilePath()))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATABASE.User.getDatabase()))) {
             oos.writeObject(userList);
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
