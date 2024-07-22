@@ -163,6 +163,9 @@ public class UserManagementSystem {
     private void loadUsersFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
             userList = (List<User>) ois.readObject();
+            for(User user: userList){
+                System.out.println(user.getUserId());
+            }
         } catch (FileNotFoundException e) {
             System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
         } catch (IOException | ClassNotFoundException e) {
