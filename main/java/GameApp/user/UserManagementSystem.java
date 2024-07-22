@@ -1,20 +1,24 @@
 package GameApp.user;
 
+import GameApp.rank.Rank;
+import GameApp.rank.RankController;
+import GameApp.rank.RankService;
 import GameApp.util.CreatedAt;
 import GameApp.util.DATABASE;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class UserManagementSystem {
-
+    private RankController rankController;
     private List<User> userList;
-  //  private UserFile filePath;
 
-    public UserManagementSystem() {
+    public UserManagementSystem() throws IOException {
         userList = new ArrayList<>();
-       // filePath = new UserFile();
+        rankController = new RankController();
         loadUsersFromFile();
     }
     //user 생성 메소드
@@ -159,9 +163,6 @@ public class UserManagementSystem {
     private void loadUsersFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
             userList = (List<User>) ois.readObject();
-            for(User user: userList){
-                System.out.println(user.getUserId());
-            }
         } catch (FileNotFoundException e) {
             System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
         } catch (IOException | ClassNotFoundException e) {
@@ -175,5 +176,17 @@ public class UserManagementSystem {
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }
+    public void showScoreFromRank(String id){
+        int score = -1;
+        int ranking = -1;
+        List<Rank> list = rankController.top20Rank();
+        for(int i = 0; i < list.size(); i ++){
+            if(id.equals(list.get(i).getUserId())){
+                score = list.get(i).getScore();
+                ranking = i + 1;
+            }
+        }
+        System.out.println("나의 점수 : "+ score +" 등수 : "+ ranking);
     }
 }

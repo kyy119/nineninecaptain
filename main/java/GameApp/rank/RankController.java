@@ -2,6 +2,7 @@ package GameApp.rank;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public class RankController {
     private final RankService rankService;
@@ -14,7 +15,7 @@ public class RankController {
         rankService.createRank(userId, score);
     }
 
-    public void top20Rank(){
-        rankService.findRankTop20();
+    public List<Rank> top20Rank(){
+        return rankService.findRankTop20();
     }
 }
