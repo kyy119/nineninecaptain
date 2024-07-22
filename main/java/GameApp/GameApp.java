@@ -121,7 +121,8 @@ public class GameApp {
                 return;
             default:
                 System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
-                break;
+                showGameMenu();
+                return;
         }
         showEndGameMenu();
     }
@@ -142,7 +143,8 @@ public class GameApp {
                 System.exit(0);
             default:
                 System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
-                break;
+                showEndGameMenu();
+                return;
         }
     }
 

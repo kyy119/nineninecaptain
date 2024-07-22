@@ -144,16 +144,13 @@ public class Game {
             }
             int result = calculateNum(num1, num2, operatorNum);
 
-
             if (!gameRunning) {
-                System.out.println("여기탔어");
                 break;
             }
 
             // 입력이 있을 때만 처리
             if (scanner.hasNextInt()) {
                 int input = scanner.nextInt();
-
 
                 if (!gameRunning) {
                     break;
@@ -179,7 +176,9 @@ public class Game {
                     System.out.println("남은 목숨은 " + life + " 개입니다.");
                 }
             } else {
-                break;  // 게임이 종료되면 입력 루프를 종료
+                if (!gameRunning) {
+                    break;
+                }  // 게임이 종료되면 입력 루프를 종료
             }
         }
 
