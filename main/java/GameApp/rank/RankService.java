@@ -21,14 +21,6 @@ public class RankService {
         List<Rank> createRank = new ArrayList<>();
         createRank.add(new Rank(userId, score));
         if(deleteLowScore(userId,score)) writeRankToFrom(createRank);
-
-//         저장된 랭크정보 가져오기
-        List<Rank> rankList = readRankFromFile();
-        System.out.println("여긴 모든 유저의 정보");
-        for(Rank rr : rankList){
-            System.out.println("유저점수 ==>> " + rr.getScore() + " | 아이디 ==>> " + rr.getUserId() + " | 생성된 날짜" + rr.getCreate());
-        }
-        System.out.println("유저정보 ==>>" + rankList.size() + " =======");
     }
     // 파일에서 읽어오기
     public List<Rank> readRankFromFile(){
