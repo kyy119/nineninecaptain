@@ -10,11 +10,25 @@ public class Game {
     Scanner scanner = new Scanner(System.in);
     Timer timer = new Timer();
 
-    private int count = 3; //시작전 3초 카운트
+
     private final CountDownLatch latch = new CountDownLatch(1);
-    private int life = 3; //목숨 3개
-    private int score = 0; //점수
-    private boolean gameRunning = true;
+    private int count; //시작전 3초 카운트
+    private int life; //목숨 3개
+    private int score; //점수
+    private boolean gameRunning;
+
+
+    public Game() {
+        this.count = 3;
+        this.life = 3;
+        this.score = 0;
+        this.gameRunning = true;
+    }
+
+    // 점수를 반환하는 메서드
+    public int getScore() {
+        return this.score;
+    }
 
     //게임 시작전 타이머
     TimerTask prepareTimeTask = new TimerTask() {
@@ -33,6 +47,10 @@ public class Game {
         }
     };
 
+
+
+
+
     //게임 시작전 멘트
     public void prepareGame(int difficulty){
         System.out.println("------------------");
@@ -48,7 +66,6 @@ public class Game {
         }
     }
 
-    //게임 시간 10초 카운트다운
     public void startGameCountDown(int difficulty){
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -57,13 +74,14 @@ public class Game {
                 gameRunning = false;
                 System.out.println("시간이 초과되었습니다! 게임 종료!");
                 System.out.println( "최종 점수: " + score );
-
+                System.out.println( "아무 숫자나 눌러주세요" );
+                timer.cancel();
             }
         };
         timer.schedule(task, 10000); // 10초 후에 task 실행
         playGame(difficulty);
-        timer.cancel();
     }
+
 
     //연산자 랜덤 선택  + (0), -(1), *(2), ÷ (3)
     public int makeRandomOperator(int difficulty){
@@ -132,6 +150,7 @@ public class Game {
 
     //게임 실행
     public void playGame(int difficulty) {
+
         while (life > 0 && gameRunning) {
             int operatorNum = makeRandomOperator(difficulty);
             int num1 = makeRandomNum(difficulty);
@@ -144,43 +163,28 @@ public class Game {
             }
             int result = calculateNum(num1, num2, operatorNum);
 
-            if (!gameRunning) {
-                break;
-            }
+            int input = scanner.nextInt();
 
-            // 입력이 있을 때만 처리
-            if (scanner.hasNextInt()) {
-                int input = scanner.nextInt();
-
-                if (!gameRunning) {
-                    break;
+            if (input == result) {
+                switch(difficulty){
+                    case 1:
+                        score += 10;
+                        break;
+                    case 2:
+                        score += 15;
+                        break;
+                    case 3:
+                        score += 20;
+                        break;
                 }
 
-                if (input == result) {
-                    switch(difficulty){
-                        case 1:
-                            score += 10;
-                            break;
-                        case 2:
-                            score += 15;
-                            break;
-                        case 3:
-                            score += 20;
-                            break;
-                    }
-
-                    System.out.println("정답입니다!! 현재 점수: " + score);
-                } else {
-                    life--;
-                    System.out.println("오답입니다!!");
-                    System.out.println("남은 목숨은 " + life + " 개입니다.");
-                }
+                System.out.println("정답입니다!! 현재 점수: " + score);
             } else {
-                if (!gameRunning) {
-                    break;
-                }  // 게임이 종료되면 입력 루프를 종료
+                life--;
+
+                System.out.println("오답입니다!!");
+                System.out.println("남은 목숨은 " + life + " 개입니다.");
             }
         }
-
     }
 }
