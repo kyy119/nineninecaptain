@@ -1,6 +1,7 @@
 package GameApp.user;
 
 import GameApp.util.CreatedAt;
+import GameApp.util.DATABASE;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +157,7 @@ public class UserManagementSystem {
         return false;
     }
     private void loadUsersFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath.getFilePath()))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
             userList = (List<User>) ois.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
@@ -166,7 +167,7 @@ public class UserManagementSystem {
     }
 
     private void saveUsersToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath.getFilePath()))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATABASE.User.getDatabase()))) {
             oos.writeObject(userList);
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());

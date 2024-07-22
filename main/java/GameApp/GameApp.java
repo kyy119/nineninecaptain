@@ -1,6 +1,8 @@
 package GameApp;
 
+import GameApp.rank.RankController;
 import GameApp.user.UserManagementSystem;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,10 +14,10 @@ public class GameApp {
     private static String loggedInPw;
     private static boolean loginFailed;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         main();
     }
-    public static void main(){
+    public static void main() throws IOException {
         try {
             userManagement = new UserManagementSystem();
         } catch (Exception e) {
@@ -64,7 +66,7 @@ public class GameApp {
         System.out.println("\n---------------");
     }
 
-    private static void login() {
+    private static void login() throws IOException {
         System.out.println("\n----로그인----");
         System.out.print("1. 아이디 입력: ");
         String id = scanner.nextLine();
@@ -88,7 +90,7 @@ public class GameApp {
         }
     }
 
-    private static void loginMenu() {
+    private static void loginMenu() throws IOException {
         int choice = 0;
         while (choice != 5) {
             printUserMenu();
@@ -105,8 +107,9 @@ public class GameApp {
                 case 1:
                     System.out.println("Game Start!");
                     break;
-                case 2:
-                    changePassword();
+                case 2://랭킹보기
+                    RankController rankController = new RankController();
+                    rankController.top20Rank();
                     break;
                 case 3:
                     showMyPage();
@@ -124,7 +127,7 @@ public class GameApp {
         }
     }
 
-    private static void showMyPage() {
+    private static void showMyPage() throws IOException {
         int choice = 0;
         while (choice != 4) {
             printMyPageMenu();
@@ -180,7 +183,7 @@ public class GameApp {
         System.out.print("원하는 작업을 선택하세요: ");
     }
 
-    private static void changePassword() {
+    private static void changePassword() throws IOException {
         System.out.println("\n----비밀번호 변경----");
         System.out.print("현재 비밀번호 입력: ");
         String currentPw = scanner.nextLine();
@@ -200,7 +203,7 @@ public class GameApp {
         System.out.println(loggedInPw);
     }
 
-    private static void deleteUser() {
+    private static void deleteUser() throws IOException {
         System.out.println("\n----아이디 삭제----");
         System.out.print("아이디 입력: ");
         String id = scanner.nextLine();
@@ -212,7 +215,7 @@ public class GameApp {
         }
     }
 
-    private static void deletePassWord(String id) {
+    private static void deletePassWord(String id) throws IOException {
         System.out.print("비밀번호 입력: ");
         String pw = scanner.nextLine();
         if (pw.equals(loggedInPw)) {
@@ -226,7 +229,7 @@ public class GameApp {
             deletePassWord(id);
         }
     }
-    private static void register() {
+    private static void register() throws IOException {
         System.out.println("\n----회원가입----");
         System.out.print("아이디 입력: ");
         String id = scanner.nextLine();
@@ -242,4 +245,6 @@ public class GameApp {
         }
 
     }
+    //========================
+
 }
