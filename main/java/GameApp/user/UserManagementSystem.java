@@ -10,11 +10,11 @@ import java.util.Scanner;
 public class UserManagementSystem {
 
     private List<User> userList;
-    private UserFile filePath;
+  //  private UserFile filePath;
 
     public UserManagementSystem() {
         userList = new ArrayList<>();
-        filePath = new UserFile();
+       // filePath = new UserFile();
         loadUsersFromFile();
     }
     //user 생성 메소드

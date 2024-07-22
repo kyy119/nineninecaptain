@@ -27,7 +27,6 @@ public class GameApp {
         }
         scanner = new Scanner(System.in);
         int choice = 0;
-
         while (choice != 3) {
             printMainMenu();
             try {
@@ -38,8 +37,6 @@ public class GameApp {
                 scanner.nextLine();  // 잘못된 입력 제거
                 continue;
             }
-            int choice = scanner.nextInt();
-            scanner.nextLine();  // 개행 문자 제거
             switch (choice) {
                 case 1:
                     login();
@@ -54,7 +51,7 @@ public class GameApp {
                     System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
                     break;
             }
-//        }
+        }
 
         scanner.close();
     }
@@ -127,10 +124,10 @@ public class GameApp {
                     break;
             }
         }
-//    }
+    }
 
     // [실행] 게임 난이도 선택
-    private static void showGameMenu() {
+    private static void showGameMenu() throws IOException {
         printGameLevel();
         int choice = scanner.nextInt();
         scanner.nextLine();  // 개행 문자 제거
@@ -157,7 +154,7 @@ public class GameApp {
     }
 
     // [실행] 게임이 끝나고 앞으로 할 행위 선택
-    private static void showEndGameMenu() {
+    private static void showEndGameMenu() throws IOException {
         printEndGameMenu();
         int choice = scanner.nextInt();
         scanner.nextLine();
