@@ -9,14 +9,13 @@ public class Game {
     Scanner scanner = new Scanner(System.in);
     Timer timer = new Timer();
 
-
     private final CountDownLatch latch = new CountDownLatch(1);
     private int count; //시작전 3초 카운트
     private int life; //목숨 3개
     private int score; //점수
     private boolean gameRunning;
 
-
+    //생성자 함수에서 초기화
     public Game() {
         this.count = 3;
         this.life = 3;
@@ -46,10 +45,6 @@ public class Game {
         }
     };
 
-
-
-
-
     //게임 시작전 멘트
     public void prepareGame(int difficulty){
         System.out.println("------------------");
@@ -65,6 +60,7 @@ public class Game {
         }
     }
 
+    //게임시작시 10초 타이머
     public void startGameCountDown(int difficulty){
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -80,7 +76,6 @@ public class Game {
         timer.schedule(task, 10000); // 10초 후에 task 실행
         playGame(difficulty);
     }
-
 
     //연산자 랜덤 선택  + (0), -(1), *(2), ÷ (3)
     public int makeRandomOperator(int difficulty){
@@ -147,6 +142,23 @@ public class Game {
         }
     }
 
+    //score에 점수 합산
+    public void addScore(int difficulty){
+        switch (difficulty) {
+            case 1:
+                score += 10;
+                break;
+            case 2:
+                score += 15;
+                break;
+            case 3:
+                score += 20;
+                break;
+            default:
+                System.out.println("점수 합산 중 유효하지 않은 난이도: " + difficulty);
+        }
+    }
+
     //게임 실행
     public void playGame(int difficulty) {
 
@@ -179,17 +191,7 @@ public class Game {
             int input = scanner.nextInt();
             if (input == result) {
                 if (gameRunning) {
-                    switch (difficulty) {
-                        case 1:
-                            score += 10;
-                            break;
-                        case 2:
-                            score += 15;
-                            break;
-                        case 3:
-                            score += 20;
-                            break;
-                    }
+                    addScore(difficulty);
                     System.out.println("정답입니다!! 현재 점수: " + score);
                 }
             } else {
