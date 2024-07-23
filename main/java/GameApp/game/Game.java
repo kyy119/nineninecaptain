@@ -65,9 +65,11 @@ public class Game {
             @Override
             public void run() {
                 gameRunning = false;
-                System.out.println("시간이 초과되었습니다! 게임 종료!");
-                System.out.println("최종 점수: " + score);
-                System.out.println("아무 키나 눌러주세요");
+                if (life > 0) {
+                    System.out.println("시간이 초과되었습니다! 게임 종료!");
+                    System.out.println("최종 점수: " + score);
+                    System.out.println("아무 키나 눌러주세요");
+                }
                 timer.cancel();
             }
         };
