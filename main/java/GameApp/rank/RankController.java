@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class RankController {
+
     private final RankService rankService;
 
     public RankController() throws IOException {
@@ -15,10 +16,11 @@ public class RankController {
         rankService.createRank(userId, score);
     }
 
-    public void top20Rank(){
+    public void top20Rank() {
         rankService.findRankTop20();
     }
-    public Rank myRank(String userId){
+
+    public int[] myRank(String userId) {
         return rankService.findMyRankbyUserId(userId);
     }
 }

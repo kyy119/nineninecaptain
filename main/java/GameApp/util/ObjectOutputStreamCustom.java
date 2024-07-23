@@ -12,6 +12,6 @@ public class ObjectOutputStreamCustom extends ObjectOutputStream {
 
     @Override
     protected void writeStreamHeader() throws IOException {
-       reset();
+        reset();
     }
 }

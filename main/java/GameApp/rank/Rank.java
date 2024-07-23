@@ -5,6 +5,7 @@ import GameApp.util.CreatedAt;
 import java.io.Serializable;
 
 public class Rank extends CreatedAt implements Serializable {
+
     private static final long serialVersionUID = -123;
     private String userId;
     private int score;

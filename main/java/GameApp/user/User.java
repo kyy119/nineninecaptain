@@ -4,6 +4,7 @@ import GameApp.util.CreatedAt;
 import java.io.Serializable;
 
 public class User extends CreatedAt implements Serializable {
+
     public static final int ACTIVE = 1;
     public static final int INACTIVE = 0;
 
@@ -13,7 +14,7 @@ public class User extends CreatedAt implements Serializable {
     private int userStatus;
 
 
-    public User( String userId, String userPw, String userName,String createdAt, int userStatus) {
+    public User(String userId, String userPw, String userName, String createdAt, int userStatus) {
         super(createDate());
         this.userId = userId;
         this.userPw = userPw;

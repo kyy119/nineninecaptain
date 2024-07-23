@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CreatedAt implements Serializable {
+
     private String create;
 
     public CreatedAt(String create) {
