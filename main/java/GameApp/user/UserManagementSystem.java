@@ -34,8 +34,6 @@ public class UserManagementSystem {
             System.exit(1);
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("파일 로드 중 오류가 발생했습니다: " + e.getMessage());
-            System.out.println("시스템을 종료합니다.");
-            System.exit(1);
         }
     }
 
@@ -46,6 +44,8 @@ public class UserManagementSystem {
             oos.writeObject(userList);
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
+            System.out.println("시스템을 종료합니다.");
+            System.exit(1);
         }
     }
 
