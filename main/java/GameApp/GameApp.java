@@ -3,6 +3,7 @@ package GameApp;
 import GameApp.rank.RankController;
 import GameApp.game.Game;
 import GameApp.user.UserManagementSystem;
+
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -18,6 +19,7 @@ public class GameApp {
     public static void main(String[] args) throws IOException {
         loginPage();
     }
+
     // [실행] 로그인 페이지
     public static void loginPage() throws IOException {
         try {
@@ -56,6 +58,7 @@ public class GameApp {
 
         scanner.close();
     }
+
     // [출력] 로그인 페이지
     private static void printLoginPage() {
         System.out.println("\n---------------");
@@ -65,6 +68,7 @@ public class GameApp {
         System.out.print("원하는 작업을 선택하세요: ");
         System.out.println("\n---------------");
     }
+
     // [실행] 로그인
     private static void login() throws IOException {
         System.out.println("\n----로그인----");
@@ -72,8 +76,8 @@ public class GameApp {
         String id = scanner.nextLine();
         System.out.print("2. 비밀번호 입력: ");
         String pw = scanner.nextLine();
-        boolean logInActive = userManagement.loginInActive(id,pw);
-        if(logInActive){
+        boolean logInActive = userManagement.loginInActive(id, pw);
+        if (logInActive) {
             System.out.println("비활성화된 아이디 입니다. 다른 아이디로 로그인을 해주세요.");
             loginFailed = true;
         }
@@ -89,6 +93,7 @@ public class GameApp {
             }
         }
     }
+
     //[실행] 회원가입
     private static void register() throws IOException {
         System.out.println("\n----회원가입----");
@@ -98,13 +103,14 @@ public class GameApp {
         String pw = scanner.nextLine();
         System.out.print("이름 입력: ");
         String name = scanner.nextLine();
-        if(userManagement.createUser(id,pw,name)){
+        if (userManagement.createUser(id, pw, name)) {
             System.out.println("회원가입이 완료되었습니다.");
             login();
-        }else{
+        } else {
             register();
         }
     }
+
     //[실행] 메인화면
     private static void mainMenu() throws IOException {
         int choice = 0;
@@ -121,7 +127,7 @@ public class GameApp {
 
             switch (choice) {
                 case 1:
-                   showGameMenu();
+                    showGameMenu();
                     break;
                 case 2://랭킹보기
                     RankController rankController = new RankController();
@@ -145,6 +151,7 @@ public class GameApp {
             }
         }
     }
+
     //[출력] 메인화면
     private static void printMainMenu() {
         System.out.println("\n--------------");
@@ -160,56 +167,74 @@ public class GameApp {
 
     // [실행] 게임 난이도 선택
     private static void showGameMenu() throws IOException {
-        printGameLevel();
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // 개행 문자 제거
-        Game game = new Game();
-        RankController rankController = new RankController();
-        switch (choice) {
-            case 1:
-                game.prepareGame(1);
-                break;
-            case 2:
-                game.prepareGame(2);
-                break;
-            case 3:
-                game.prepareGame(3);
-                break;
-            case 4:
-                mainMenu();
-                return;
-            default:
-                System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
-                showGameMenu();
-                return;
+        while (true) {
+            try {
+                printGameLevel();
+                int choice = scanner.nextInt();
+                scanner.nextLine();  // 개행 문자 제거
+
+                Game game = new Game();
+                RankController rankController = new RankController();
+
+                switch (choice) {
+                    case 1:
+                        game.prepareGame(1);
+                        break;
+                    case 2:
+                        game.prepareGame(2);
+                        break;
+                    case 3:
+                        game.prepareGame(3);
+                        break;
+                    case 4:
+                        mainMenu();
+                        return;
+                    default:
+                        System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
+                        continue;
+                }
+
+                rankController.createRank(loggedInId, game.getScore());
+                showEndGameMenu();
+                return; // 게임이 종료되면 메뉴를 다시 보여주지 않음
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                scanner.nextLine(); // 잘못된 입력을 버퍼에서 제거
+            }
         }
-        rankController.createRank(loggedInId,game.getScore());
-        showEndGameMenu();
     }
+
 
     // [실행] 게임이 끝나고 앞으로 할 행위 선택
     private static void showEndGameMenu() throws IOException {
-        printEndGameMenu();
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-        switch (choice) {
-            case 1:
-                showGameMenu();
-                break;
-            case 2:
-                mainMenu();
-                break;
-            case 3:
-                System.exit(0);
-            default:
-                System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
-                showEndGameMenu();
-                return;
+        while (true) {
+            try {
+                printEndGameMenu();
+                int choice = scanner.nextInt();
+                scanner.nextLine();  // 개행 문자 제거
+
+                switch (choice) {
+                    case 1:
+                        showGameMenu();
+                        return;  // 루프를 벗어나도록 return 사용
+                    case 2:
+                        mainMenu();
+                        return;  // 루프를 벗어나도록 return 사용
+                    case 3:
+                        System.exit(0);
+                    default:
+                        System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                scanner.nextLine();  // 잘못된 입력을 제거
+            }
         }
     }
 
+
     // [출력] 게임 난이도 선택
-    private static void printGameLevel(){
+    private static void printGameLevel() {
         System.out.println("\n------------------------");
         System.out.println("----게임 난이도를 선텍하세요----");
         System.out.println("1. 1단계 (쉬움) 정답시 + 10점");
@@ -221,11 +246,12 @@ public class GameApp {
     }
 
     // [출력] 게임이 끝나고 앞으로 할 행위 선택
-    private static void printEndGameMenu(){
+    private static void printEndGameMenu() {
         System.out.println("----------------------");
         System.out.println("1.재도전 2.홈 화면 3.종료");
         System.out.println("----------------------");
     }
+
     // [실행] 마이페이지
     private static void showMyPage() throws IOException {
         int choice = 0;
@@ -259,6 +285,7 @@ public class GameApp {
             }
         }
     }
+
     //[출력] 마이페이지
     private static void printMyPageMenu() {
         System.out.println("\n--------------");
@@ -270,6 +297,7 @@ public class GameApp {
         System.out.println("--------------");
         System.out.print("원하는 작업을 선택하세요: ");
     }
+
     //[실행] 마이페이지 비밀번호 변경
     private static void changePassword() throws IOException {
         System.out.println("\n----비밀번호 변경----");
@@ -289,6 +317,7 @@ public class GameApp {
         loginPage();
         System.out.println(loggedInPw);
     }
+
     //[실행] 회원탈퇴
     private static void deleteUser() throws IOException {
         System.out.println("\n----아이디 삭제----");
@@ -301,6 +330,7 @@ public class GameApp {
             deleteUser();
         }
     }
+
     // [실행] 회원탈퇴
     private static void deletePassWord(String id) throws IOException {
         System.out.print("비밀번호 입력: ");
