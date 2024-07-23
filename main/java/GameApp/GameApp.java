@@ -16,9 +16,10 @@ public class GameApp {
     private static boolean loginFailed;
 
     public static void main(String[] args) throws IOException {
-        main();
+        loginPage();
     }
-    public static void main() throws IOException {
+    // [실행] 로그인 페이지
+    public static void loginPage() throws IOException {
         try {
             userManagement = new UserManagementSystem();
         } catch (Exception e) {
@@ -28,7 +29,7 @@ public class GameApp {
         scanner = new Scanner(System.in);
         int choice = 0;
         while (choice != 3) {
-            printMainMenu();
+            printLoginPage();
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();  // 개행 문자 제거
@@ -55,8 +56,8 @@ public class GameApp {
 
         scanner.close();
     }
-
-    private static void printMainMenu() {
+    // [출력] 로그인 페이지
+    private static void printLoginPage() {
         System.out.println("\n---------------");
         System.out.println("1. 로그인");
         System.out.println("2. 회원가입");
@@ -64,7 +65,7 @@ public class GameApp {
         System.out.print("원하는 작업을 선택하세요: ");
         System.out.println("\n---------------");
     }
-
+    // [실행] 로그인
     private static void login() throws IOException {
         System.out.println("\n----로그인----");
         System.out.print("1. 아이디 입력: ");
@@ -80,7 +81,7 @@ public class GameApp {
         if (loggedIn) {
             loggedInId = id;
             loggedInPw = pw;
-            loginMenu();
+            mainMenu();
         } else {
             if (!loginFailed) {
                 System.out.println("로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인하세요.");
@@ -88,11 +89,27 @@ public class GameApp {
             }
         }
     }
-
-    private static void loginMenu() throws IOException {
+    //[실행] 회원가입
+    private static void register() throws IOException {
+        System.out.println("\n----회원가입----");
+        System.out.print("아이디 입력: ");
+        String id = scanner.nextLine();
+        System.out.print("비밀번호 입력: ");
+        String pw = scanner.nextLine();
+        System.out.print("이름 입력: ");
+        String name = scanner.nextLine();
+        if(userManagement.createUser(id,pw,name)){
+            System.out.println("회원가입이 완료되었습니다.");
+            login();
+        }else{
+            register();
+        }
+    }
+    //[실행] 메인화면
+    private static void mainMenu() throws IOException {
         int choice = 0;
         while (choice != 5) {
-            printUserMenu();
+            printMainMenu();
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();  // 개행 문자 제거
@@ -115,6 +132,9 @@ public class GameApp {
                     break;
                 case 4:
                     System.out.println("로그아웃합니다.");
+                    loggedInId = " ";
+                    loggedInPw = " ";
+                    loginPage();
                     return;
                 case 5:
                     System.out.println("프로그램을 종료합니다...");
@@ -124,6 +144,18 @@ public class GameApp {
                     break;
             }
         }
+    }
+    //[출력] 메인화면
+    private static void printMainMenu() {
+        System.out.println("\n--------------");
+        System.out.println("----정보----");
+        System.out.println("1. Game Start");
+        System.out.println("2. 랭킹 보기");
+        System.out.println("3. 마이페이지");
+        System.out.println("4. 로그아웃");
+        System.out.println("5. 프로그램 종료");
+        System.out.println("--------------");
+        System.out.print("원하는 작업을 선택하세요: ");
     }
 
     // [실행] 게임 난이도 선택
@@ -144,7 +176,7 @@ public class GameApp {
                 game.prepareGame(3);
                 break;
             case 4:
-                loginMenu();
+                mainMenu();
                 return;
             default:
                 System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
@@ -165,7 +197,7 @@ public class GameApp {
                 showGameMenu();
                 break;
             case 2:
-                loginMenu();
+                mainMenu();
                 break;
             case 3:
                 System.exit(0);
@@ -194,7 +226,7 @@ public class GameApp {
         System.out.println("1.재도전 2.홈 화면 3.종료");
         System.out.println("----------------------");
     }
-
+    // [실행] 마이페이지
     private static void showMyPage() throws IOException {
         int choice = 0;
         while (choice != 4) {
@@ -219,7 +251,7 @@ public class GameApp {
                     deleteUser();
                     break;
                 case 4:
-                    loginMenu();
+                    mainMenu();
                     break;
                 default:
                     System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
@@ -227,30 +259,18 @@ public class GameApp {
             }
         }
     }
-
+    //[출력] 마이페이지
     private static void printMyPageMenu() {
         System.out.println("\n--------------");
         System.out.println("----마이페이지----");
-        System.out.println("1. 나의 랭킹");
+        System.out.println("1. 나의 점수");
         System.out.println("2. 비밀번호 변경");
         System.out.println("3. 회원 탈퇴");
         System.out.println("4. 뒤로 가기");
         System.out.println("--------------");
         System.out.print("원하는 작업을 선택하세요: ");
     }
-
-    private static void printUserMenu() {
-        System.out.println("\n--------------");
-        System.out.println("----정보----");
-        System.out.println("1. Game Start");
-        System.out.println("2. 랭킹 보기");
-        System.out.println("3. 마이페이지");
-        System.out.println("4. 로그아웃");
-        System.out.println("5. 프로그램 종료");
-        System.out.println("--------------");
-        System.out.print("원하는 작업을 선택하세요: ");
-    }
-
+    //[실행] 마이페이지 비밀번호 변경
     private static void changePassword() throws IOException {
         System.out.println("\n----비밀번호 변경----");
         System.out.print("현재 비밀번호 입력: ");
@@ -264,13 +284,12 @@ public class GameApp {
         System.out.print("새로운 비밀번호 입력: ");
         String newPw = scanner.nextLine();
         userManagement.updateEqualPassword(loggedInId, newPw);
-//        userManagement.updateUserPassword(loggedInId, newPw);
         System.out.println("비밀번호가 성공적으로 변경되었습니다.");
         loggedInPw = newPw;  // 변경된 비밀번호로 업데이트
-        main();
+        loginPage();
         System.out.println(loggedInPw);
     }
-
+    //[실행] 회원탈퇴
     private static void deleteUser() throws IOException {
         System.out.println("\n----아이디 삭제----");
         System.out.print("아이디 입력: ");
@@ -282,7 +301,7 @@ public class GameApp {
             deleteUser();
         }
     }
-
+    // [실행] 회원탈퇴
     private static void deletePassWord(String id) throws IOException {
         System.out.print("비밀번호 입력: ");
         String pw = scanner.nextLine();
@@ -291,26 +310,11 @@ public class GameApp {
             System.out.println("회원 탈퇴가 완료되었습니다.");
             loggedInId = null;
             loggedInPw = null;
-            main();
+            loginPage();
         } else {
             System.out.println("잘못된 비밀 번호 입니다. 다시 입력해주세요.");
             deletePassWord(id);
         }
     }
-    private static void register() throws IOException {
-        System.out.println("\n----회원가입----");
-        System.out.print("아이디 입력: ");
-        String id = scanner.nextLine();
-        System.out.print("비밀번호 입력: ");
-        String pw = scanner.nextLine();
-        System.out.print("이름 입력: ");
-        String name = scanner.nextLine();
-        if(userManagement.createUser(id,pw,name)){
-            System.out.println("회원가입이 완료되었습니다.");
-            login();
-        }else{
-            register();
-        }
 
-    }
 }

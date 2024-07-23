@@ -132,7 +132,7 @@ public class RankService {
         top20.stream()
             .forEach(rr ->  {
                 int count = rankCounter.getAndIncrement();
-                System.out.println(count + "등 | 유저점수 ==>> " + rr.getScore() + "아이디 ==>> " + rr.getUserId() + "생성된 날짜" + rr.getCreate());
+                System.out.println(count + "등 | 유저점수 ==>> " + rr.getScore() + " 아이디 ==>> " + rr.getUserId() + " 생성된 날짜" + rr.getCreate());
             });
 
 

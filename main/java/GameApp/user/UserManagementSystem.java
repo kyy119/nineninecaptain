@@ -21,6 +21,28 @@ public class UserManagementSystem {
         rankController = new RankController();
         loadUsersFromFile();
     }
+    //user.txt 파일 불러오는 메소드
+    private void loadUsersFromFile() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
+            userList = (List<User>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
+            System.out.println("시스템을 종료합니다.");
+            System.exit(1);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("파일 로드 중 오류가 발생했습니다: " + e.getMessage());
+            System.out.println("시스템을 종료합니다.");
+            System.exit(1);
+        }
+    }
+    //user.txt 파일에 내용 저장하는 메소드
+    private void saveUsersToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATABASE.User.getDatabase()))) {
+            oos.writeObject(userList);
+        } catch (IOException e) {
+            System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
     //user 생성 메소드
     public boolean createUser(String id, String pw, String name) {
         if (!isUserIdAvailable(id)) {
@@ -46,7 +68,25 @@ public class UserManagementSystem {
         return true;
 
     }
-
+    //사용중인 id 확인 메소드
+    public boolean isUserIdAvailable(String id) {
+        for (User user : userList) {
+            if (user.getUserId().equals(id) && user.getUserStatus() == User.ACTIVE) {
+                return false;  // 사용 중인 아이디가 있으면 false 반환
+            }
+        }
+        return true;  // 사용 가능한 아이디면 true 반환
+    }
+    //활동 상태 확인 메소드
+    public boolean isUserIdActive(String id) {
+        for (User user : userList) {
+            if (user.getUserId().equals(id) && user.getUserStatus() == User.INACTIVE) {
+                return false;  // 사용 중인 아이디가 있거나 활동이 비활성화인 경우
+            }
+        }
+        return true;  // 사용 가능한 아이디면 true 반환
+    }
+    //비활성화된 아이디 로그인 메소드
     public boolean loginInActive(String id, String pw){
         for(User user : userList){
             if(user.getUserId().equals(id) && user.getPassword().equals(pw) && user.getUserStatus() == User.INACTIVE){
@@ -55,8 +95,7 @@ public class UserManagementSystem {
         }
         return false;
     }
-
-    //로그인 메소드
+    //활성화된 로그인 메소드
     public boolean loginActive(String id, String pw) {
         for (User user : userList) {
             if (user.getUserId().equals(id) && user.getPassword().equals(pw)
@@ -65,23 +104,9 @@ public class UserManagementSystem {
                 return true;
             }
         }
-
         return false;
     }
-
-    public void updateUserId(String currentId, String newId) {
-        for (User user : userList) {
-            if (user.getUserId().equals(currentId)) {
-                user.setUserId(newId);
-                saveUsersToFile();
-                System.out.println("아이디가 성공적으로 변경되었습니다.");
-                return;
-            }
-        }
-        System.out.println("오류: 해당 사용자를 찾을 수 없습니다.");
-    }
-
-    //user 업데이트 메소드
+    //사용자 비밀번호 변경 메소드
     public void updateUserPassword(String id, String newPw) {
         for (User user : userList) {
             if (user.getUserId().equals(id)) {
@@ -98,6 +123,7 @@ public class UserManagementSystem {
             }
         }
     }
+    //변경하려는 비밀번호가 전이랑 같은지 확인하는 메소드
     public void updateEqualPassword(String id, String pw){
         for(User user : userList){
             if(user.getUserId().equals(id)){
@@ -110,7 +136,7 @@ public class UserManagementSystem {
             }
         }
     }
-    //user 삭제 메소드
+    //사용자 활동 상태 변경 메소드
     public void deleteUser(String id, String pw) {
         boolean found = false;
         for (User user : userList) {
@@ -130,57 +156,16 @@ public class UserManagementSystem {
             System.out.println("오류: 해당 사용자를 찾을 수 없습니다.");
         }
     }
-
-    //사용중인 id 확인 메소드
-    public boolean isUserIdAvailable(String id) {
-        for (User user : userList) {
-            if (user.getUserId().equals(id) && user.getUserStatus() == User.ACTIVE) {
-                return false;  // 사용 중인 아이디가 있으면 false 반환
-            }
-        }
-        return true;  // 사용 가능한 아이디면 true 반환
-    }
-
-    //활동 상태 확인 메소드
-    public boolean isUserIdActive(String id) {
-        for (User user : userList) {
-            if (user.getUserId().equals(id) && user.getUserStatus() == User.INACTIVE) {
-                return false;  // 사용 중인 아이디가 있거나 활동이 비활성화인 경우
-            }
-        }
-        return true;  // 사용 가능한 아이디면 true 반환
-    }
-
-    //비밀 번호 확인 메소드
-    public boolean isUserPassword(String id, String pw) {
-        for (User user : userList) {
-            if (user.getUserId().equals(id) && user.getPassword().equals(pw)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private void loadUsersFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATABASE.User.getDatabase()))) {
-            userList = (List<User>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("파일 로드 중 오류가 발생했습니다: " + e.getMessage());
-        }
-    }
-
-    private void saveUsersToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATABASE.User.getDatabase()))) {
-            oos.writeObject(userList);
-        } catch (IOException e) {
-            System.out.println("파일 저장 중 오류가 발생했습니다: " + e.getMessage());
-        }
-    }
+    //마이페이지내의 나의 점수를 보여주는 메소드
     public void showScoreFromRank(String id){
         int score = -1;
         int ranking = -1;
-        Rank r = rankController.myRank(id);
-        System.out.println("나의 점수 : "+ r.getScore()+" 입니다.");
+        try {
+            Rank r = rankController.myRank(id);
+            System.out.println("나의 점수 : "+ r.getScore()+" 입니다.");
+        }catch (Exception e){
+            System.out.println("랭킹 없습니다. 게임을 해서 랭킹을 등록하세요!");
+            e.getMessage();
+        }
     }
 }
